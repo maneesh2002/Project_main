@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,12 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -193,7 +200,32 @@ public class BaseClass {
 
 	}
 
-
+	public static void getParticularCellValue(String path, int rowIndex, int cellIndex) throws IOException {
+		
+		File f = new File(path);
+		FileInputStream fis = new FileInputStream(f);
+		
+		Workbook wb = new XSSFWorkbook(fis);
+		Sheet sheet = wb.getSheetAt(0);
+		Row row = sheet.getRow(rowIndex);
+		Cell cell = row.getCell(cellIndex);
+		
+		CellType type = cell.getCellType();
+		
+		if (type.equals(type.STRING)) {
+			String cellValue = cell.getStringCellValue();
+			System.out.println(cellValue);
+		}
+		else if (type.equals(type.NUMERIC))
+		{
+			double numericCellValue = cell.getNumericCellValue();
+			int i = (int) numericCellValue;
+			String cellValue = Integer.toString(i);
+			System.out.println(cellValue);
+		}				
+		wb.close();
+		
+		}
 
 
 
